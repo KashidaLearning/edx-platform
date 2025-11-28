@@ -77,7 +77,7 @@
 
           loaded[src] = true;
           s = document.createElement("script");
-          s.setAttribute("src", src);
+          s.src = new URL(src, document.baseURI).toString();
           s.setAttribute("type", "text/javascript");
           s.onload = completionHandlerGenerator(index);
           // Need to use the DOM elements directly or the scripts won't execute properly.
