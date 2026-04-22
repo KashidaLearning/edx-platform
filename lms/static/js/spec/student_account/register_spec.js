@@ -163,8 +163,7 @@
                             options: [
                                 {value: '', name: '--'},
                                 {value: 'm', name: 'Male'},
-                                {value: 'f', name: 'Female'},
-                                {value: 'o', name: 'Other'}
+                                {value: 'f', name: 'Female'}
                             ],
                             required: false,
                             exposed: false,
