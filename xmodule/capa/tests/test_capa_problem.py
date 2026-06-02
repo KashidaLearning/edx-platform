@@ -669,6 +669,45 @@ class CAPAProblemReportHelpersTest(unittest.TestCase):
         )
         assert problem.find_answer_text(answer_id, choice_id) == answer_text
 
+
+    @ddt.data(
+         # Test for ChoiceResponse - text wrapped in <div> by Rich Text editor
+        ('1_2_1', 'choice_0', 'over-suspicious'),
+        ('1_2_1', 'choice_1', 'funny'),
+        # Test for MultipleChoiceResponse - text wrapped in <div> by Rich Text editor
+        ('1_3_1', 'choice_0', 'The iPad'),
+        ('1_3_1', 'choice_1', 'Napster'),
+        ('1_3_1', 'choice_2', 'The iPod'),
+        ('1_3_1', ['choice_0', 'choice_1'], 'The iPad, Napster'),
+    )
+    @ddt.unpack
+    def test_find_answer_text_choices_with_div_wrapped_text(self, answer_id, choice_id, answer_text):
+        """
+        Test that answer text is correctly extracted when choice text is wrapped
+        in <div> tags, as produced by the new Studio Rich Text editor in Teak.
+        e.g. <choice correct="true"><div>Some text</div></choice>
+        """
+        problem = new_loncapa_problem(
+        """
+            <problem>
+                <choiceresponse>
+                    <checkboxgroup label="Select the correct synonym of paranoid?">
+                        <choice correct="true"><div>over-suspicious</div></choice>
+                        <choice correct="false"><div>funny</div></choice>
+                    </checkboxgroup>
+                </choiceresponse>
+                <multiplechoiceresponse>
+                    <choicegroup type="MultipleChoice">
+                        <choice correct="false"><div>The iPad</div></choice>
+                        <choice correct="false"><div>Napster</div></choice>
+                        <choice correct="true"><div>The iPod</div></choice>
+                    </choicegroup>
+                </multiplechoiceresponse>
+            </problem>
+        """
+    )
+        assert problem.find_answer_text(answer_id, choice_id) == answer_text
+
     @ddt.data(
         # Test for ChoiceResponse
         ('1_2_1', 'over-suspicious'),

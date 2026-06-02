@@ -540,7 +540,12 @@ class ChoiceGroup(InputTypeBase):
                 if not text_only:
                     text = stringify_children(choice)
                 else:
+                    # Use direct text if available. Fall back to itertext() to handle
+                    # cases where the Rich Text editor wraps choice text in child elements
+                    # such as <div>. e.g. <choice><div>Some text</div></choice>
                     text = choice.text
+                    if not text or not text.strip():
+                        text = ''.join(choice.itertext()).strip() or None
                 choices.append((choice.get("name"), text))
             else:
                 if choice.tag != 'compoundhint':
